@@ -146,6 +146,7 @@ string NMEAParser::getRegisteredSentenceHandlersCSV()
 
 void NMEAParser::readByte(uint8_t b){
 	uint8_t startbyte = '$';
+	uint8_t startbyte2 = '#';
 
 	if (fillingbuffer){
 		if (b == '\n'){
@@ -173,7 +174,7 @@ void NMEAParser::readByte(uint8_t b){
 		}
 	}
 	else {
-		if (b == startbyte){			// only start filling when we see the start byte.
+		if (b == startbyte || b == startbyte2){			// only start filling when we see the start byte.
 			fillingbuffer = true;
 			buffer.push_back(b);
 		}
@@ -335,13 +336,15 @@ void NMEAParser::parseText(NMEASentence& nmea, string txt){
 	size_t startbyte = 0;
 	size_t dollar = txt.find_last_of('$');
 	if (dollar == string::npos){
-		// No dollar sign... INVALID!
-		return;
-	}
-	else
-	{
-		startbyte = dollar;
-	}
+        size_t hash = txt.find_last_of('#');
+        if (hash == string::npos) {
+            // No $ or # sign... INVALID sentence!
+            return;
+        }
+        startbyte = hash;
+    } else {
+        startbyte = dollar;
+    }
 
 
 	// Get rid of data up to last'$'
