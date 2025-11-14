@@ -480,8 +480,8 @@ void NMEAParser::parseText(NMEASentence& nmea, string txt){
 			nmea.isvalid = false;
 			stringstream ss;
 			ss << "Invalid character (non-alpha-num) in parameter " << i << " (from 0): \"" << nmea.parameters[i] << "\"";
-			onError(nmea, ss.str() );
-			break;
+			// onError(nmea, ss.str() );
+			// break;
 		}
 	}
 
